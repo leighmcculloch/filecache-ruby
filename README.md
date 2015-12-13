@@ -30,7 +30,7 @@ puts cache.get(:key)     # nil
 # with an expiry time of 30 seconds, and a file hierarchy three 
 # directories deep
 cache = FileCache.new("my-cache", "/home/simon/caches", 30, 3)
-cache.put("joe", "bloggs")
+cache.set("joe", "bloggs")
 puts(cache.get("joe"))   # "bloggs"
 sleep 30
 puts(cache.get("joe"))   # nil
