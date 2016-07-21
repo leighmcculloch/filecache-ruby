@@ -1,11 +1,7 @@
-#!/usr/bin/env ruby
-
-$:.push(File.join(File.dirname(__FILE__), '..', 'lib'))
-
 require 'filecache'
 require 'test/unit'
 
-class TestFileCache < Test::Unit::TestCase
+class FileCacheTest < Test::Unit::TestCase
   KEY1 = "key1"
   VALUE1 = "value1"
   VALUE2 = "value2"
