@@ -1,39 +1,36 @@
-FileCache is a file-based caching library for Ruby. It's 
-available for download from [RubyForge][rubyforge-filecache]
+# filecache
 
-# Note about the current code
+[![Gem Version](https://badge.fury.io/rb/filecache.svg)](http://badge.fury.io/rb/filecache)
+[![Build Status](https://travis-ci.org/leighmcculloch/filecache-ruby.svg)](https://travis-ci.org/leighmcculloch/filecache-ruby)
 
-I haven't touched this code since I wrote it in 2008! I don't
-use Ruby much any more. I'm putting it on Github to make it easy
-for people to find, tweak and extend it. Please feel free to 
-drag it into the 21st century and send me pull requests.
+FileCache is a file-based caching library for Ruby.
 
-# Installation
+## Install
 
-    gem install -r filecache
- 
-(On a Unix-like system you'll probably want to run that with sudo.)
-
-# Synopsis
-
-```ruby
-require 'rubygems'
-require 'filecache'
-
-cache = FileCache.new
-cache.set(:key, "value")
-puts cache.get(:key)     # "value"
-cache.delete(:key)
-puts cache.get(:key)     # nil
-
-# create a new cache called "my-cache", rooted in /home/simon/caches
-# with an expiry time of 30 seconds, and a file hierarchy three 
-# directories deep
-cache = FileCache.new("my-cache", "/home/simon/caches", 30, 3)
-cache.set("joe", "bloggs")
-puts(cache.get("joe"))   # "bloggs"
-sleep 30
-puts(cache.get("joe"))   # nil
+```
+gem install filecache
 ```
 
-[rubyforge-filecache]: http://rubyforge.org/projects/filecache/
+or
+
+```ruby
+gem 'filecache'
+```
+
+## Usage
+
+The following code will create a cache called `my-cache` rooted at `/tmp/caches` with an expiry time of `30` seconds, and a file hierarchy three directories deep.
+
+```ruby
+require 'filecache'
+
+cache = FileCache.new("my-cache", "/tmp/caches", 30, 3)
+cache.set("key", "value")
+puts(cache.get("key")) # "value"
+sleep 30
+puts(cache.get("key")) # nil
+```
+
+## Thanks
+
+Thanks to [Simon Whitaker](http://github.com/simonwhitaker/filecache-ruby) who created this ruby gem.
