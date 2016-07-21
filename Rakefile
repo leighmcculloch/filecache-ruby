@@ -11,7 +11,7 @@ end
 RDoc::Task.new do |doc|
   doc.main = 'README.rdoc'
   doc.rdoc_dir = 'html'
-  doc.rdoc_files = FileList.new %w[README COPYING lib/**/*.rb]
+  doc.rdoc_files = FileList.new %w[README LICENSE lib/**/*.rb]
   doc.title = 'Ruby - filecache'
 end
 
