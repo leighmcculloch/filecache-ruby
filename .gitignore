@@ -1,5 +1,6 @@
 ### /Users/simon/.gitignore-boilerplates/Ruby.gitignore
 
+Gemfile.lock
 *.gem
 *.rbc
 .bundle
