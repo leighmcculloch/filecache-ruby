@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name              = 'filecache'
-  s.version           = '1.0.1'
+  s.version           = '1.0.2'
   s.authors           = ['Simon Whitaker', 'Leigh McCulloch']
   s.homepage          = 'https://github.com/leighmcculloch/filecache-ruby'
   s.summary           = 'A file-based caching library'
