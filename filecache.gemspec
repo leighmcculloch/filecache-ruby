@@ -2,6 +2,7 @@ Gem::Specification.new do |s|
   s.name              = 'filecache'
   s.version           = '1.0.1'
   s.authors           = ['Simon Whitaker', 'Leigh McCulloch']
+  s.homepage          = 'https://github.com/leighmcculloch/filecache-ruby'
   s.summary           = 'A file-based caching library'
   s.files             = ['lib/filecache.rb', 'tests/test_filecache.rb']
   s.require_path      = 'lib'
