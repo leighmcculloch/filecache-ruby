@@ -40,11 +40,11 @@ class FileCache
     path = get_path(key)
 
     # expire
-    if @expiry > 0 && File.exists?(path) && Time.new - File.new(path).mtime >= @expiry
+    if @expiry > 0 && File.exist?(path) && Time.new - File.new(path).mtime >= @expiry
       FileUtils.rm(path)
     end
     
-    if File.exists?(path)
+    if File.exist?(path)
       f = File.open(path, "r")
       result = Marshal.load(f)
       f.close
@@ -72,7 +72,7 @@ class FileCache
 
   # Delete ALL data from the cache, regardless of expiry time
   def clear
-    if File.exists?(get_root)
+    if File.exist?(get_root)
       FileUtils.rm_r(get_root)
       FileUtils.mkdir_p(get_root)
     end
