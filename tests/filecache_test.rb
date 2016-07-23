@@ -14,6 +14,25 @@ class FileCacheTest < Test::Unit::TestCase
     
     f.delete(KEY1)
     assert_nil(f.get(KEY1), "delete")
+    
+    assert_equal(
+      f.get_or_set(KEY1) do
+        VALUE1
+      end,
+      VALUE1,
+      "set_or_get"
+    )
+    
+    assert_equal(
+      f.get_or_set(KEY1) do
+        VALUE2
+      end,
+      VALUE1,
+      "set_or_get"
+    )
+
+    f.delete(KEY1)
+    assert_nil(f.get(KEY1), "delete")
 
     f.set(KEY1, VALUE1)
     assert_equal(f.get(KEY1), VALUE1, "set on previously deleted key")
