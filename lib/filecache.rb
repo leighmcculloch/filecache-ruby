@@ -1,13 +1,13 @@
 require 'digest/md5'
 require 'fileutils'
 
-# A file-based caching library. It uses Marshal::dump and Marshal::load 
+# A file-based caching library. It uses Marshal::dump and Marshal::load
 # to serialize/deserialize cache values - so you should be OK to cache
 # object values.
 class FileCache
-  
+
   MAX_DEPTH = 32
-  
+
   # Create a new reference to a file cache system.
   # domain:: A string that uniquely identifies this caching
   #          system on the given host
@@ -25,7 +25,7 @@ class FileCache
     @depth   = depth > MAX_DEPTH ? MAX_DEPTH : depth
     FileUtils.mkdir_p(get_root)
   end
-  
+
   # Set a cache value for the given key. If the cache contains an existing value for
   # the key it will be overwritten.
   def set(key, value)
@@ -33,7 +33,7 @@ class FileCache
     Marshal.dump(value, f)
     f.close
   end
-  
+
   # Return the value for the specified key from the cache. Returns nil if
   # the value isn't found.
   def get(key)
@@ -43,7 +43,7 @@ class FileCache
     if @expiry > 0 && File.exist?(path) && Time.new - File.new(path).mtime >= @expiry
       FileUtils.rm(path)
     end
-    
+
     if File.exist?(path)
       f = File.open(path, "r")
       result = Marshal.load(f)
@@ -53,7 +53,7 @@ class FileCache
       return nil
     end
   end
-  
+
   # Return the value for the specified key from the cache if the key exists in the
   # cache, otherwise set the value returned by the block. Returns the value if found
   # or the value from calling the block that was set.
@@ -77,7 +77,7 @@ class FileCache
       FileUtils.mkdir_p(get_root)
     end
   end
-  
+
   # Delete all expired data from the cache
   def purge
     @t_purge = Time.new
@@ -85,27 +85,27 @@ class FileCache
   end
 
 #-------- private methods ---------------------------------
-private  
+private
   def get_path(key)
     md5 = Digest::MD5.hexdigest(key.to_s).to_s
-    
+
     dir = File.join(get_root, md5.split(//)[0..@depth - 1])
     FileUtils.mkdir_p(dir)
     return File.join(dir, md5)
   end
-  
+
   def get_root
     if @root == nil
       @root = File.join(@root_dir, @domain)
     end
     return @root
   end
-  
+
   def purge_dir(dir)
     Dir.foreach(dir) do |f|
       next if f =~ /^\.\.?$/
       path = File.join(dir, f)
-      if File.directory?(path) 
+      if File.directory?(path)
         purge_dir(path)
       elsif @t_purge - File.new(path).mtime >= @expiry
         # Ignore files starting with . - we didn't create those
@@ -113,7 +113,7 @@ private
         FileUtils.rm(path)
       end
     end
-    
+
     # Delete empty directories
     if Dir.entries(dir).delete_if{|e| e =~ /^\.\.?$/}.empty?
       Dir.delete(dir)
