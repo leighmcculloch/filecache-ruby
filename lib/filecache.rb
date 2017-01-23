@@ -23,6 +23,7 @@ class FileCache
     @root_dir = root_dir
     @expiry  = expiry
     @depth   = depth > MAX_DEPTH ? MAX_DEPTH : depth
+    @root    = nil # define to avoid instance variable @root not initialized
     FileUtils.mkdir_p(get_root)
   end
 
