@@ -49,14 +49,23 @@ class FileCacheTest < Test::Unit::TestCase
   end
 
   class SlowValueClass
+    def initialize
+      @value = nil
+    end
+
     # This value will be slow when marshalled
     def value
+      return @value if @value
       sleep 1
       "slow_value"
     end
 
     def marshal_dump
       [value]
+    end
+
+    def marshal_load(array)
+      @value = array[0]
     end
   end
 
@@ -71,7 +80,10 @@ class FileCacheTest < Test::Unit::TestCase
       end
     end.new
 
-    f = FileCache.new("unit-test", "/tmp", nil, nil, logger)
+    # Test that concurrency is handled when Mutex is ineffective i.e.
+    # Different processes accessing the same cache files
+    mutex_enabled = false
+    f = FileCache.new("unit-test", "/tmp", nil, nil, logger, mutex_enabled)
     f.clear
 
     slow_thread = Thread.new do
@@ -86,6 +98,22 @@ class FileCacheTest < Test::Unit::TestCase
 
     assert_true(logger.warnings.length == 1, "Warning is sent to the logger")
     assert_true(logger.warnings[0].include?('EOFError'))
+
+    # Test that Mutex handles concurrent writes & reads in the same process
+    logger.warnings.clear
+    f = FileCache.new("unit-test", "/tmp", nil, nil, logger)
     f.clear
+
+    slow_thread = Thread.new do
+      f.set(KEY2, SlowValueClass.new)
+    end
+    fast_thread = Thread.new do
+      sleep 0.5 # make sure slow_thread is has got to the point of writing the value and the cache file is open
+      assert_equal(f.get(KEY2).value, "slow_value", "get returns true because the file is open and results in EOFError")
+    end
+    fast_thread.join
+    slow_thread.join
+
+    assert_true(logger.warnings.length == 0, "There is no warning as the Mutex prevents concurrency")
   end
 end
