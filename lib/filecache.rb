@@ -18,12 +18,15 @@ class FileCache
   # depth:: The depth of the file tree storing the cache. Should
   #         be large enough that no cache directory has more than
   #         a couple of hundred objects in it
-  def initialize(domain = "default", root_dir = "/tmp", expiry = 0, depth = 2)
+  # logger:: optional Ruby Logger object or Logger interface
+  def initialize(domain = "default", root_dir = "/tmp", expiry = nil, depth = nil, logger = nil)
     @domain  = domain
     @root_dir = root_dir
-    @expiry  = expiry
-    @depth   = depth > MAX_DEPTH ? MAX_DEPTH : depth
+    @expiry  = expiry || 0
+    @depth   = [depth || 2, MAX_DEPTH].min
     @root    = nil # define to avoid instance variable @root not initialized
+    @logger  = logger
+
     FileUtils.mkdir_p(get_root)
   end
 
@@ -53,6 +56,10 @@ class FileCache
     else
       return nil
     end
+  rescue EOFError => e
+    # See https://www.ruby-forum.com/topic/194747
+    logger.warn "EOFError whilst getting key #{key}. Race condition where key file is probably still being written. Err: #{e}" if logger
+    return nil
   end
 
   # Return the value for the specified key from the cache if the key exists in the
@@ -87,6 +94,8 @@ class FileCache
 
 #-------- private methods ---------------------------------
 private
+  attr_reader :logger
+
   def get_path(key)
     md5 = Digest::MD5.hexdigest(key.to_s).to_s
 
