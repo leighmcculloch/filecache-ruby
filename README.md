@@ -29,6 +29,8 @@ cache.set("key", "value")
 puts(cache.get("key")) # "value"
 sleep 30
 puts(cache.get("key")) # nil
+cache.get_or_set("key") { 1 } # 1
+cache.get_or_set("key") { 2 } # 1 (cached value is returned, block is not executed)
 ```
 
 ## Thanks
