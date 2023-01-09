@@ -1,0 +1,16 @@
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: ruby/setup-ruby@319066216501fbd5e2d568f14b7d68c19fb67a5d
+      with:
+        ruby-version: '3.2.0'
+    - run: bundle exec ruby tests/filecache_test.rb
