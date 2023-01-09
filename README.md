@@ -1,7 +1,6 @@
 # filecache
 
 [![Gem Version](https://badge.fury.io/rb/filecache.svg)](http://badge.fury.io/rb/filecache)
-[![Build Status](https://travis-ci.org/leighmcculloch/filecache-ruby.svg)](https://travis-ci.org/leighmcculloch/filecache-ruby)
 
 FileCache is a file-based caching library for Ruby.
 
